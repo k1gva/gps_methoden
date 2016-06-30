@@ -7,9 +7,32 @@ L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={
     accessToken: 'pk.eyJ1IjoiazFndmEiLCJhIjoiWVhHMk5nOCJ9.hK5Z3lzyyhN4p5JwnFGVaQ'
 }).addTo(mymap);
 
-
+// Vergleichswert, kein Spiel 14.06. 15 Uhr
 var ohneSpiel = 'gpx/06_14_1500.gpx';
-new L.GPX(ohneSpiel, {async: true}).on('loaded', function(e) {
-    map.fitBounds(e.target.getBounds());
+new L.GPX(ohneSpiel, {async: true, polyline_options: {color: '#0000FF'}}).on('loaded', function(e) {
+    mymap.fitBounds(e.target.getBounds());
 }).addTo(mymap);
 
+// Spiel Oesterreich - Ungarn 14.06. 18 Uhr
+var oestUng = 'gpx/06_14_1800.gpx';
+new L.GPX(oestUng, {async: true, polyline_options: {color: '#FF0000'}}).on('loaded', function(e) {
+    mymap.fitbounds(e.target.getBounds());
+}).addTo(mymap);
+
+// Spiel England - Wales, 16.06. 15 Uhr
+var engWal = 'gpx/06_16_1500.gpx';
+new L.GPX(engWal, {async: true, polyline_options: {color: '#FF0000'}}).on('loaded', function(e) {
+    mymap.fitbounds(e.target.getBounds());
+}).addTo(mymap);
+
+// Spiel Ukraine - Nordirland, 16.06. 18 Uhr
+var ukaNor = 'gpx/06_16_1800.gpx';
+new L.GPX(ukaNor, {async: true, polyline_options: {color: '#FFBF00'}}).on('loaded', function(e) {
+    mymap.fitbounds(e.target.getBounds());
+}).addTo(mymap);
+
+// Spiel Nordirland - Deutschland, 21.06. 18 Uhr
+var norDeu = 'gpx/06_21_1800.gpx';
+new L.GPX(norDeu, {async: true, polyline_options: {color: '#FFFF00'}}).on('loaded', function(e) {
+    mymap.fitbounds(e.target.getBounds());
+}).addTo(mymap);
