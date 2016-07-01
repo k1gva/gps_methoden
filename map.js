@@ -13,11 +13,21 @@ new L.GPX(ohneSpiel, {async: true, polyline_options: {color: '#0000FF'}}).on('lo
     mymap.fitBounds(e.target.getBounds());
 }).addTo(mymap);
 
+
 // Spiel Oesterreich - Ungarn 14.06. 18 Uhr
-var oestUng = 'gpx/06_14_1800.gpx';
-new L.GPX(oestUng, {async: true, polyline_options: {color: '#FF0000'}}).on('loaded', function(e) {
-    mymap.fitbounds(e.target.getBounds());
+var oestUng = new L.GPX(
+        'gpx/06_14_1800.gpx',
+       {async: true,
+        polyline_options: {
+            color: '#FF0000'}}).on('loaded', function(e){
+                mymap.fitbounds(e.target.getBounds());
 }).addTo(mymap);
+
+oestUng.on('loaded', function(e) {
+    var gpx = e.target,
+    distM = gpx.getdistance()
+});
+console.log(oestUng);
 
 // Spiel England - Wales, 16.06. 15 Uhr
 var engWal = 'gpx/06_16_1500.gpx';
