@@ -7,26 +7,28 @@ L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={
     accessToken: 'pk.eyJ1IjoiazFndmEiLCJhIjoiWVhHMk5nOCJ9.hK5Z3lzyyhN4p5JwnFGVaQ'
 }).addTo(mymap);
 
-var layerOhne = L.geoJson().addTo(mymap);
-var layerEngWal = L.geoJson().addTo(mymap);
-
-// geojson Daten ohne Spiel
-var ohneSpiel = $.getJSON('geojson/06_14_1500.gpx.json', function(data) {
-    L.geoJson(data).addTo(layerOhne);
-});
-
-// geojson Daten Eng - Wal
-var engWal = $.getJSON('geojson/06_16_1500.gpx.json', function(data) {
-    L.geoJson(data).addTo(layerEngWal);
-});
+var layers = [];
+var overlayMaps = {};
 
 var baseMap = {
     "Grundkarte": mymap
 };
 
-var overlayMaps = {
-    "Ohne Spiel": layerOhne,
-    "England - Wales": layerEngWal
+// Add new files here
+addJsonToMap('06_14_1500.gpx.json', 'Kein Spiel');
+addJsonToMap('06_16_1500.gpx.json', 'ENG - WAL');
+
+function addJsonToMap(filename, title) {
+  var newLayer = L.geoJson().addTo(mymap);
+  $.getJSON('geojson/' + filename, function(data) {
+    L.geoJson(data).addTo(newLayer);
+  });
+  layers.push({layer: newLayer, title});
+}
+
+// add Layers to Layercontrol
+for(var i = 0; i < layers.length; i++) {
+  overlayMaps[layers[i].title] = layers[i].layer;
 }
 
 L.control.layers(null, overlayMaps).addTo(mymap);
