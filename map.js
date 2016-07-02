@@ -20,9 +20,13 @@ addJsonToMap('06_16_1500.gpx-lines.json', 'ENG - WAL');
 
 function onEachFeature(feature, layer) {
   if (feature.properties && feature.properties.speed) {
+    var date = new Date(null);
+    date.setSeconds(feature.properties.time);
     layer.bindPopup(
-        Math.floor(feature.properties.speed * 3.6) + ' km/h<br />' +
-        Math.floor(feature.properties.distance) + 'm from start');
+        '<b>' + Math.floor(feature.properties.speed * 3.6) + ' km/h</b> at<br />' +
+        '<b>' + Math.floor(feature.properties.distance) + 'm</b> from start<br />' +
+        'after <b>' + date.getUTCMinutes() + ' minutes and ' +
+        date.getUTCSeconds() + ' seconds</b>');
   }
 }
 
@@ -63,7 +67,7 @@ function addJsonToMap(filename, title) {
       onEachFeature: onEachFeature
     }).addTo(newLayer);
   });
-  layers.push({layer: newLayer, title});
+  layers.push({layer: newLayer, title: title});
 }
 
 // add Layers to Layercontrol
