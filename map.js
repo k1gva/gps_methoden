@@ -17,8 +17,8 @@ var baseMap = {
 // Add new files here
 addJsonToMap('06_14_1500.gpx-lines.json', 'Kein Spiel');
 addJsonToMap('06_16_1500.gpx-lines.json', 'ENG - WAL');
-addJsonToMap('06_16_1800.gpx-lines.json', '1');
-addJsonToMap('06_21_1800.gpx-lines.json', '2');
+addJsonToMap('06_16_1800.gpx-lines.json', 'UKR - NIR');
+addJsonToMap('06_21_1800.gpx-lines.json', 'NIR - GER');
 
 function onEachFeature(feature, layer) {
   if (feature.properties && feature.properties.speed) {
