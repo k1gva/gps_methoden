@@ -17,6 +17,8 @@ var baseMap = {
 // Add new files here
 addJsonToMap('06_14_1500.gpx-lines.json', 'Kein Spiel');
 addJsonToMap('06_16_1500.gpx-lines.json', 'ENG - WAL');
+addJsonToMap('06_16_1800.gpx-lines.json', '1');
+addJsonToMap('06_21_1800.gpx-lines.json', '2');
 
 function onEachFeature(feature, layer) {
   if (feature.properties && feature.properties.speed) {
@@ -42,8 +44,8 @@ function speedColor(feature) {
     var speed = feature.properties.speed;
     //normalize
     speed *= 12.75;
-    var green = Math.floor(255 - speed); //the higher the speed, the less green it should be.
-    var red = Math.floor(speed); // vice versa, math.floor to round numbers
+    var green = Math.max(0, Math.floor(255 - speed)); //the higher the speed, the less green it should be.
+    var red = Math.min(255, Math.floor(speed)); // vice versa, math.floor to round numbers
     // convert to hex
     green = green.toString(16);
     red = red.toString(16);
@@ -53,9 +55,9 @@ function speedColor(feature) {
     // build hex color string
     var color = '#' + red + green + '00';
     console.log(speed, color);
-    return {color: color};
+    return {color: color, opacity: 1};
   } else {
-    return {color: '#00000'};
+    return {color: '#00000', opacity: 0};
   }
 }
 
