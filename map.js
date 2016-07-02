@@ -15,13 +15,51 @@ var baseMap = {
 };
 
 // Add new files here
-addJsonToMap('06_14_1500.gpx.json', 'Kein Spiel');
-addJsonToMap('06_16_1500.gpx.json', 'ENG - WAL');
+addJsonToMap('06_14_1500.gpx-lines.json', 'Kein Spiel');
+addJsonToMap('06_16_1500.gpx-lines.json', 'ENG - WAL');
+
+function onEachFeature(feature, layer) {
+  if (feature.properties && feature.properties.speed) {
+    layer.bindPopup((feature.properties.speed * 3.6) + ' km/h');
+  }
+}
+
+function speedColor(feature) {
+  // return a color in the range of #[00-ff][00-ff]00, i.e. green to red,
+  // depending on the 'speed' property of the feature. lower speeds are more
+  // green, higher speeds more red. maximum speed should be 20 m/s (~70km/h).
+  //
+  // so, we need to multiply by (255/20) = 12.75 and then convert to
+  // hexadecimal characters.
+
+  if (feature.properties) {
+    var speed = feature.properties.speed;
+    //normalize
+    speed *= 12.75;
+    var green = Math.floor(255 - speed); //the higher the speed, the less green it should be.
+    var red = Math.floor(speed); // vice versa, math.floor to round numbers
+    // convert to hex
+    green = green.toString(16);
+    red = red.toString(16);
+    // add leading zeros
+    if (red.length === 1) red = '0' + red;
+    if (green.length === 1) green = '0' + green;
+    // build hex color string
+    var color = '#' + red + green + '00';
+    console.log(speed, color);
+    return {color};
+  } else {
+    return {color: '#00000'};
+  }
+}
 
 function addJsonToMap(filename, title) {
   var newLayer = L.geoJson().addTo(mymap);
   $.getJSON('geojson/' + filename, function(data) {
-    L.geoJson(data).addTo(newLayer);
+    L.geoJson(data, {
+      style: speedColor,
+      onEachFeature: onEachFeature
+    }).addTo(newLayer);
   });
   layers.push({layer: newLayer, title});
 }
