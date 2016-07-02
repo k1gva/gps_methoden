@@ -20,7 +20,9 @@ addJsonToMap('06_16_1500.gpx-lines.json', 'ENG - WAL');
 
 function onEachFeature(feature, layer) {
   if (feature.properties && feature.properties.speed) {
-    layer.bindPopup((feature.properties.speed * 3.6) + ' km/h');
+    layer.bindPopup(
+        Math.floor(feature.properties.speed * 3.6) + ' km/h<br />' +
+        Math.floor(feature.properties.distance) + 'm from start');
   }
 }
 
@@ -47,7 +49,7 @@ function speedColor(feature) {
     // build hex color string
     var color = '#' + red + green + '00';
     console.log(speed, color);
-    return {color};
+    return {color: color};
   } else {
     return {color: '#00000'};
   }
