@@ -32,32 +32,62 @@ function onEachFeature(feature, layer) {
   }
 }
 
-function speedColor(feature) {
-  // return a color in the range of #[00-ff][00-ff]00, i.e. green to red,
-  // depending on the 'speed' property of the feature. lower speeds are more
-  // green, higher speeds more red. maximum speed should be 20 m/s (~70km/h).
-  //
-  // so, we need to multiply by (255/20) = 12.75 and then convert to
-  // hexadecimal characters.
+/**
+ * Converts an HSL color value to RGB. Conversion formula
+ * adapted from http://en.wikipedia.org/wiki/HSL_color_space.
+ * Assumes h, s, and l are contained in the set [0, 1] and
+ * returns r, g, and b in the set [0, 255].
+ *
+ * @param   {number}  h       The hue
+ * @param   {number}  s       The saturation
+ * @param   {number}  l       The lightness
+ * @return  {Array}           The RGB representation
+ *
+ * taken from https://stackoverflow.com/a/36722579
+ */
+function hslToRgb(h, s, l){
+  var r, g, b;
 
+  if (s === 0) {
+    r = g = b = l; // achromatic
+  } else {
+    var hue2rgb = function hue2rgb(p, q, t){
+      if(t < 0) t += 1;
+      if(t > 1) t -= 1;
+      if(t < 1/6) return p + (q - p) * 6 * t;
+      if(t < 1/2) return q;
+      if(t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+      return p;
+    };
+
+    var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+    var p = 2 * l - q;
+    r = hue2rgb(p, q, h + 1/3);
+    g = hue2rgb(p, q, h);
+    b = hue2rgb(p, q, h - 1/3);
+  }
+
+  return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+}
+
+function decToHex(i) {
+  // return a integer in hexadecimal string representation with at least two chars
+  i = i.toString(16);
+  if (i.length === 1) i = '0' + i;
+  return i;
+}
+function speedColor(feature) {
+  //calculate rgb color between red and green by speed
   if (feature.properties) {
     var speed = feature.properties.speed;
-    //normalize
-    speed *= 12.75;
-    var green = Math.max(0, Math.floor(255 - speed)); //the higher the speed, the less green it should be.
-    var red = Math.min(255, Math.floor(speed)); // vice versa, math.floor to round numbers
-    // convert to hex
-    green = green.toString(16);
-    red = red.toString(16);
-    // add leading zeros
-    if (red.length === 1) red = '0' + red;
-    if (green.length === 1) green = '0' + green;
-    // build hex color string
-    var color = '#' + red + green + '00';
-    console.log(speed, color);
-    return {color: color, opacity: 1};
+    //maximum speed should be 20m/s, in the hue range 0-0.5 (red to green), so divide by 40
+    speed = speed / 36;
+    var rgb = hslToRgb(0.5-speed, 1, 0.5);
+    var hex = '#'  + decToHex(rgb[0]) + decToHex(rgb[1]) + decToHex(rgb[2]);
+    console.log(hex, speed);
+    return {color: hex, opacity: 1};
   } else {
-    return {color: '#00000', opacity: 0};
+    return {color: '#00000', opacity: 0}; //filter out line segments that have no speed data
   }
 }
 
