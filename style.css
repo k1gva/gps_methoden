@@ -7,3 +7,11 @@ body {
     height: 100vh;
     width: 100vw;
 }
+
+#comparisontable {
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  padding: 0;
+  margin: 0;
+}
